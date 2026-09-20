@@ -4,17 +4,21 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
-const allowedOrigins = [
-  'https://frontend-eta-eight-qf2b8ve1ny.vercel.app',
-  'https://frontend-kfzd9zy34-samanshahabs-projects.vercel.app',
-  'http://localhost:5173',
-];
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
+
+// Connect DB on every request (serverless friendly)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ message: 'Database connection failed', error: err.message });
+  }
+});
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/destinations', require('./routes/destinations'));
@@ -30,4 +34,8 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;
