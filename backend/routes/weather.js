@@ -2,8 +2,24 @@ const express = require('express');
 const router = express.Router();
 const https = require('https');
 
+const cityMap = {
+  'hunza valley': 'Gilgit',
+  'hunza': 'Gilgit',
+  'skardu': 'Skardu,PK',
+  'baltistan': 'Skardu,PK',
+  'swat valley': 'Saidu Sharif',
+  'swat': 'Saidu Sharif',
+  'murree': 'Murree',
+  'naran': 'Naran',
+  'kaghan': 'Naran',
+  'fairy meadows': 'Chilas',
+  'bali': 'Denpasar',
+  'maldives': 'Male',
+};
+
 router.get('/:city', (req, res) => {
-  const { city } = req.params;
+  const raw = req.params.city.toLowerCase().trim();
+  const city = cityMap[raw] || req.params.city;
   const apiKey = process.env.WEATHER_API_KEY;
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric&cnt=40`;
 
