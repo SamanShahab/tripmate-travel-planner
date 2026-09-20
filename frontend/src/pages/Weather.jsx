@@ -28,7 +28,8 @@ export default function Weather() {
     if (!cityName) return;
     setLoading(true); setError('');
     try {
-      const res = await fetch(`/api/weather/${encodeURIComponent(cityName)}`);
+      const base = import.meta.env.VITE_API_URL || '/api';
+      const res = await fetch(`${base}/weather/${encodeURIComponent(cityName)}`);
       const data = await res.json();
       if (data.cod === '200' || data.cod === 200) {
         setWeather(data);
@@ -36,7 +37,7 @@ export default function Weather() {
         setError('City not found. Try: Lahore, Karachi, Islamabad, Dubai, Istanbul');
       }
     } catch (err) {
-      setError('Connection error. Make sure backend is running on port 5000.');
+      setError('Weather unavailable. Try again.');
     } finally { setLoading(false); }
   };
 
