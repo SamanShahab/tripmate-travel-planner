@@ -9,7 +9,8 @@ connectDB();
 const app = express();
 
 const allowedOrigins = [
-  'https://tripmate-travel-planner-x78l-b94vz6lkc-samanshahabs-projects.vercel.app',
+  'https://frontend-eta-eight-qf2b8ve1ny.vercel.app',
+  'https://frontend-kfzd9zy34-samanshahabs-projects.vercel.app',
   'http://localhost:5173',
 ];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
